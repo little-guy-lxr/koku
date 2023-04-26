@@ -44,7 +44,7 @@ FROM  base AS stage-amd64
 
 ARG TARGETARCH
 
-FROM stage-${TARGETARCH} AS final
+FROM stage-amd64 AS final
 # PIPENV_DEV is set to true in the docker-compose allowing
 # local builds to install the dev dependencies
 ARG PIPENV_DEV=False
