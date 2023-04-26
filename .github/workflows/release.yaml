@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-20.04
+    steps:
+      - run: echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+      - name: Export IMAGE_PREFIX
+        run: |
+          if [ "${{ secrets.IMAGE_PREFIX }}" != "" ]; then IMAGE_PREFIX=${{ secrets.IMAGE_PREFIX }}; else IMAGE_PREFIX=alaudapublic/; fi
+          echo "IMAGE_PREFIX=${IMAGE_PREFIX}" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - run: docker build -t littleguylxr/koku_base:latest -f Dockerfile .
+      - run: docker push littleguylxr/koku_base:latest
