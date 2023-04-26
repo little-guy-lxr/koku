@@ -14,5 +14,8 @@ jobs:
           if [ "${{ secrets.IMAGE_PREFIX }}" != "" ]; then IMAGE_PREFIX=${{ secrets.IMAGE_PREFIX }}; else IMAGE_PREFIX=alaudapublic/; fi
           echo "IMAGE_PREFIX=${IMAGE_PREFIX}" >> $GITHUB_ENV
       - uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - run: docker build -t littleguylxr/koku_base:latest -f Dockerfile .
       - run: docker push littleguylxr/koku_base:latest
+
