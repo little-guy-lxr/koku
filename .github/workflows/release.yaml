@@ -12,6 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - run: docker build -t ${{ secrets.IMAGE_PREFIX }/koku_base:latest -f Dockerfile .
-      - run: docker push ${{ secrets.IMAGE_PREFIX }/koku_base:latest
+      - run: docker build -t ${{ secrets.IMAGE_PREFIX }}/koku_base:latest -f Dockerfile .
+      - run: docker push ${{ secrets.IMAGE_PREFIX }}/koku_base:latest
 
