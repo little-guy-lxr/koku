@@ -39,25 +39,8 @@ RUN INSTALL_PKGS="python39 python39-devel glibc-langpack-en gcc shadow-utils" &&
     microdnf -y clean all --enablerepo='*'
 
 
-# Intermediary container only used for ARM systems
-FROM --platform=arm64 base AS build-arm64
-RUN microdnf install -y --setopt=tsflags=nodocs gcc-c++ cmake  git tar gzip wget openssl-devel which cyrus-sasl patch zlib-devel
-RUN git clone https://github.com/edenhill/librdkafka.git /root/librdkafka
-WORKDIR /root/librdkafka
-RUN git checkout tags/v2.0.2
-RUN ./configure --prefix /opt/librdkafka --install-deps
-RUN make -j4
-RUN make install
-
-
-# Intermeiate steps for ARM64
-FROM --platform=arm64 base AS stage-arm64
-COPY --from=build-arm64 /opt/librdkafka/include/librdkafka/ /usr/include/librdkafka/
-COPY --from=build-arm64 /opt/librdkafka/lib/ /usr/lib/
-RUN ldconfig
-
 # No intermetiate steps for x86_64, but declare it so it can be used for the final image
-FROM --platform=amd64 base AS stage-amd64
+FROM  base AS stage-amd64
 
 ARG TARGETARCH
 
